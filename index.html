@@ -1,0 +1,225 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+    <link rel="shortcut icon" href="../../assets/ico/favicon.png">
+
+    <title>DB Doc - Documentation Tool For Databases</title>
+
+    <!-- Bootstrap core CSS -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+
+    <!-- Custom styles for this template -->
+    <link href="css/sticky-footer-navbar.css" rel="stylesheet">
+
+    <!-- HTML5 shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!--[if lt IE 9]>
+      <script src="js/html5shiv.js"></script>
+      <script src="js/respond.min.js"></script>
+    <![endif]-->
+	<script src="js/jquery.js"></script>
+	<script language="javascript">
+	$(document).ready(function (){
+		//MySQL
+		$('#btn_show_tables').click(function (){
+			$.post(
+			  'lib/show_mysql_tables.php',
+			  {
+			    dbserver:$('#dbserver').val(),
+				username:$('#username').val(),
+				password:$('#password').val(),
+				database:$('#sel_database').val()
+			  },
+			  function (data)
+			  {
+				$('#result').html("");
+				$('#result').html(data);
+			  }
+			);
+		});
+		
+		$('#btn_connect').click(function (){
+			$.post(
+			  'lib/connect_mysql.php',
+			  {
+			    dbserver:$('#dbserver').val(),
+				username:$('#username').val(),
+				password:$('#password').val()
+			  },
+			  function (data)
+			  {
+				if (data == "")
+				{
+					$('#result').html("Connect error!");
+					$('#sel_database').attr("disabled", true);
+					$('#btn_show_tables').attr("disabled", true);
+					$('#btn_create_doc').attr("disabled", true);
+				}
+				else
+				{
+					$('#result').html("Connect successfully!");
+					$('#sel_database').attr("disabled", false);
+					$('#btn_show_tables').attr("disabled", false);
+					$('#btn_create_doc').attr("disabled", false);
+					$('#sel_database').append(data);
+				}
+			  }
+			);
+		});
+		
+		$('#btn_create_doc').click(function (){
+			$.post(
+			  'lib/create_mysql_doc.php',
+			  {
+			    dbserver:$('#dbserver').val(),
+				username:$('#username').val(),
+				password:$('#password').val(),
+				database:$('#sel_database').val()
+			  },
+			  function (data)
+			  {
+				$('#result').html("");
+				$('#result').html(data);
+			  }
+			);
+		});
+		
+		//MSSQL
+		$('#btn_show_tables_ms').click(function (){
+			$.post(
+			  'lib/show_mssql_tables.php',
+			  {
+			    dbserver:$('#msdbserver').val(),
+				username:$('#msusername').val(),
+				password:$('#mspassword').val(),
+				database:$('#sel_database_ms').val()
+			  },
+			  function (data)
+			  {
+				$('#result').html("");
+				$('#result').html(data);
+			  }
+			);
+		});
+		
+		$('#btn_connect_ms').click(function (){
+			$.post(
+			  'lib/connect_mssql.php',
+			  {
+			    dbserver:$('#msdbserver').val(),
+				username:$('#msusername').val(),
+				password:$('#mspassword').val()
+			  },
+			  function (data)
+			  {
+				if (data == "")
+				{
+					$('#result').html("Connect mssql error!");
+					$('#sel_database_ms').attr("disabled", true);
+					$('#btn_show_tables_ms').attr("disabled", true);
+					$('#btn_create_doc_ms').attr("disabled", true);
+				}
+				else
+				{
+					$('#result').html("Connect successfully!");
+					$('#result').html(data);
+					$('#sel_database_ms').attr("disabled", false);
+					$('#btn_show_tables_ms').attr("disabled", false);
+					$('#btn_create_doc_ms').attr("disabled", false);
+					$('#sel_database_ms').append(data);
+				}
+			  }
+			);
+		});
+		
+		$('#btn_create_doc_ms').click(function (){
+			$.post(
+			  'lib/create_mssql_doc.php',
+			  {
+			    dbserver:$('#msdbserver').val(),
+				username:$('#msusername').val(),
+				password:$('#mspassword').val(),
+				database:$('#sel_database_ms').val()
+			  },
+			  function (data)
+			  {
+				$('#result').html("");
+				$('#result').html(data);
+			  }
+			);
+		});
+	});
+	</script>
+  </head>
+
+  <body>
+
+    <!-- Wrap all page content here -->
+    <div id="wrap">
+
+      <!-- Fixed navbar -->
+      <div class="navbar navbar-default navbar-fixed-top">
+        <div class="container">
+          <div class="navbar-header">
+            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+              <span class="icon-bar"></span>
+            </button>
+            <a class="navbar-brand" href="index.html">DB Doc</a>
+          </div>
+          <div class="collapse navbar-collapse">
+            <ul class="nav navbar-nav">
+              <li class="active"><a href="#">Home</a></li>
+              <li><a href="contact.html">Contact</a></li>
+			  <li><a href="help.html">Help</a></li>
+            </ul>
+          </div><!--/.nav-collapse -->
+        </div>
+      </div>
+
+      <!-- Begin page content -->
+      <div class="container">
+        <div class="page-header">
+          <h1>DB Doc - document your databases automatically</h1>
+        </div>
+		<div class="form-inline">
+			<input type="text" name="dbserver" id="dbserver" class="form-control" placeholder="DB Server" value="localhost" style="width:120px" />
+			<input type="text" name="username" id="username" class="form-control" placeholder="Username" value="root" style="width:100px" />
+			<input type="text" name="password" id="password" class="form-control" placeholder="Password" value="123" style="width:100px" />
+			<button id="btn_connect" class="btn btn-success">Connect MySQL</button>
+			<select id="sel_database" disabled="true" style="width:150px"></select>
+			<button id="btn_show_tables" class="btn btn-success" disabled="true">Show Tables</button>
+			<button id="btn_create_doc" class="btn btn-success" disabled="true">Create Doc</button>
+		</div><br/>
+		<div class="form-inline">
+			<input type="text" name="msdbserver" id="msdbserver" class="form-control" placeholder="MSDB Server" value="10.199.11.51" style="width:120px" />
+			<input type="text" name="msusername" id="msusername" class="form-control" placeholder="Username" value="sa" style="width:100px" />
+			<input type="text" name="mspassword" id="mspassword" class="form-control" placeholder="Password" value="1" style="width:100px" />
+			<button id="btn_connect_ms" class="btn btn-success">Connect MSSQL</button>
+			<select id="sel_database_ms" disabled="true" style="width:150px"></select>
+			<button id="btn_show_tables_ms" class="btn btn-success" disabled="true">Show Tables</button>
+			<button id="btn_create_doc_ms" class="btn btn-success" disabled="true">Create Doc</button>
+		</div>
+      </div>
+	  <div class="container" id="result" style="width:%100; min-height:600px; background-color:#eeeeee; margin-top:30px; padding-top:30px; margin-bottom:50px; overflow-x:auto;">
+	  </div>
+    </div>
+
+    <div id="footer">
+      <div class="container">
+        <p class="text-muted credit">Css By <a href="http://getbootstrap.com/" target="_blank">Twitter Bootstrap</a></p>
+      </div>
+    </div>
+
+
+    <!-- Bootstrap core JavaScript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    
+    <script src="js/bootstrap.min.js"></script>
+  </body>
+</html>
